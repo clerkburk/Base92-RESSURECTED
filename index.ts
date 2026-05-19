@@ -211,12 +211,13 @@ export class Base92 extends ReusableMemory {
 
 
 
-export function pure92StrDecoder(inputStr: string): string {
-  const input = TEXT_ENCODER.encode(inputStr)
+export function pure92Decoder(inputRaw: string | Uint8Array): Uint8Array {
+	const input = typeof inputRaw === "string" ? TEXT_ENCODER.encode(inputRaw) : inputRaw
+
 	if (input.length === 0 || input[0] === 126)
-		return String.fromCharCode(126)
+		return Uint8Array.of(126)
 	if (input.length < 2)
-		return ""
+		return new Uint8Array(0)
 
 	const outputLength = ((input.length * 13 + (input.length % 2) * 6) / 8) | 0
 	const output = new Uint8Array(outputLength)
@@ -251,5 +252,5 @@ export function pure92StrDecoder(inputStr: string): string {
 		}
 	}
 
-	return TEXT_DECODER.decode(output.subarray(0, j))
+	return output
 }
