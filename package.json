@@ -1,6 +1,6 @@
 {
   "name": "base92",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Base92 (~4 kB)",
   "type": "module",
   "main": "./dist/index.js",
@@ -9,6 +9,9 @@
     ".": "./dist/index.js",
     "./browser": "./dist/index.min.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "esbuild index.ts --minify --outfile=dist/index.js --format=esm && tsc",
     "build:browser": "esbuild index.ts --minify --outfile=dist/index.min.js --format=iife --global-name=Base92Codec",
