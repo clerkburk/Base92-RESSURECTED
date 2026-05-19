@@ -208,3 +208,47 @@ export class Base92 extends ReusableMemory {
 		return this.view(j, copyMemory)
 	}
 }
+
+
+
+export function pure92Decoder(input: Uint8Array): Uint8Array {
+	if (input.length === 0 || input[0] === 126)
+		return Uint8Array.of(126)
+	if (input.length < 2)
+		return new Uint8Array(0)
+
+	const outputLength = ((input.length * 13 + (input.length % 2) * 6) / 8) | 0
+	const output = new Uint8Array(outputLength)
+
+	let workspace = 0
+	let wssize = 0
+	let j = 0
+
+	for (let i = 0; i + 1 < input.length; i += 2) {
+		const a = BASE92_DECODE_TABLE[input[i] & 0xff]
+		const b = BASE92_DECODE_TABLE[input[i + 1] & 0xff]
+		if (a === 255 || b === 255)
+			throw new Error("Unable to parse base92 string.")
+		workspace = ((workspace << 13) | (Math.imul(a, 91) + b)) >>> 0
+		wssize += 13
+		while (wssize >= 8) {
+			wssize -= 8
+			output[j++] = (workspace >> wssize) & 0xff
+		}
+	}
+
+	if (input.length % 2 === 1) {
+		const value = BASE92_DECODE_TABLE[input[input.length - 1] & 0xff]
+		if (value === 255)
+			throw new Error("Unable to parse base92 string.")
+
+		workspace = ((workspace << 6) | value) >>> 0
+		wssize += 6
+		while (wssize >= 8) {
+			wssize -= 8
+			output[j++] = (workspace >> wssize) & 0xff
+		}
+	}
+
+	return output
+}

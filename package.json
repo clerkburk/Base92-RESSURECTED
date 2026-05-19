@@ -1,6 +1,6 @@
 {
   "name": "base92",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "description": "Base92 (~4 kB)",
   "type": "module",
   "main": "./dist/index.js",
