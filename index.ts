@@ -39,13 +39,13 @@ class ReusableMemory {
 		this.memory = new Uint8Array(size + (size & this.memoryLength))
 	}
 
-	protected view(length: number, copy = false): Uint8Array {
+	protected view(length: number, copy = false) {
 		return copy ? this.memory.slice(0, length) : this.memory.subarray(0, length)
 	}
 }
 
 export class Base64 extends ReusableMemory {
-	encode(input: Uint8Array): string {
+	encode(input: Uint8Array) {
 		const outputLength = Math.ceil(input.length / 3) * 4
 		this.ensureMemory(outputLength)
 
@@ -53,9 +53,9 @@ export class Base64 extends ReusableMemory {
 		let j = 0
 
 		while (i + 2 < input.length) {
-			const a = input[i++];
-			const b = input[i++];
-			const c = input[i++];
+			const a = input[i++]
+			const b = input[i++]
+			const c = input[i++]
 
 			this.memory[j++] = BASE64_ALPHABET_CODES[a >> 2]
 			this.memory[j++] = BASE64_ALPHABET_CODES[((a & 0x03) << 4) | (b >> 4)]
@@ -80,7 +80,7 @@ export class Base64 extends ReusableMemory {
 		return TEXT_DECODER.decode(this.memory.subarray(0, j))
 	}
 
-	decode(input: string, copyMemory = false): Uint8Array {
+	decode(input: string, copyMemory = false) {
 		if (input.length % 4 !== 0)
 			throw new Error("Unable to parse base64 string.")
 
@@ -120,7 +120,7 @@ export class Base64 extends ReusableMemory {
 export class Base92 extends ReusableMemory {
 	private static readonly TILDE = 126
 
-	encode(input: Uint8Array): string {
+	encode(input: Uint8Array) {
 		if (input.length === 0) {
 			this.ensureMemory(1)
 			this.memory[0] = Base92.TILDE
@@ -163,7 +163,7 @@ export class Base92 extends ReusableMemory {
 		return TEXT_DECODER.decode(this.memory.subarray(0, j))
 	}
 
-	decode(input: string, copyMemory = false): Uint8Array {
+	decode(input: string, copyMemory = false) {
 		if (input.length === 0 || input.charCodeAt(0) === Base92.TILDE)
 			return Uint8Array.of(Base92.TILDE)
 
@@ -211,7 +211,7 @@ export class Base92 extends ReusableMemory {
 
 
 
-export function pure92Decoder(inputRaw: string | Uint8Array): Uint8Array {
+export function pure92Decoder(inputRaw: string | Uint8Array) {
 	const input = typeof inputRaw === "string" ? TEXT_ENCODER.encode(inputRaw) : inputRaw
 
 	if (input.length === 0 || input[0] === 126)
