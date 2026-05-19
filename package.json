@@ -12,7 +12,9 @@
   "scripts": {
     "build": "esbuild index.ts --minify --outfile=dist/index.js --format=esm && tsc",
     "build:browser": "esbuild index.ts --minify --outfile=dist/index.min.js --format=iife --global-name=Base92Codec",
-    "prepublishOnly": "npm run build && npm run build:browser"
+    "prepublishOnly": "npm run build && npm run build:browser",
+    "prepare": "npm run build && npm run build:browser",
+    "prepack": "npm run build && npm run build:browser"
   },
   "author": "Affolter Matias",
   "keywords": [
