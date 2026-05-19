@@ -1,12 +1,19 @@
 {
   "name": "base92",
-  "version": "3.0.0",
-  "description": "Base92 (~7.3 kB)",
-  "devDependencies": {
-    "tinyify": "^4.0.0"
+  "version": "3.0.1",
+  "description": "Base92 (~4 kB)",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./browser": "./dist/index.min.js"
   },
-  "build": {},
-  "scripts": {},
+  "scripts": {
+    "build": "esbuild index.ts --minify --outfile=dist/index.js --format=esm && tsc",
+    "build:browser": "esbuild index.ts --minify --outfile=dist/index.min.js --format=iife --global-name=Base92Codec",
+    "prepublishOnly": "npm run build && npm run build:browser"
+  },
   "author": "Affolter Matias",
   "keywords": [
     "base92",
@@ -22,10 +29,8 @@
     "type": "git",
     "url": "https://github.com/pixa-pics/Base92.git"
   },
-  "engines": {
-    "node": ">=0.8.0"
-  },
-  "dependencies": {
-    "core-js": "^3.27.1"
+  "devDependencies": {
+    "esbuild": "^0.28.0",
+    "typescript": "^5.8.3"
   }
 }
